@@ -1,6 +1,6 @@
 #ifndef C8CB4CEE_73D6_412D_86C8_24780CA26426
 #define C8CB4CEE_73D6_412D_86C8_24780CA26426
-#include "chipf10x.h"
+#include "chipf10x.hpp"
 #define DMA_ConfigByte1_bit8 0
 #define DMA_ConfigByte2_bit16 1
 #define DMA_ConfigByte4_bit32 2

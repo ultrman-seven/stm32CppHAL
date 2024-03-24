@@ -28,14 +28,15 @@ namespace ADC
 {
     void dmaWay(uint8_t ADCx, uint8_t n, const char *pin[], uint32_t add)
     {
+        --ADCx;
         DMA::configUnit cfg;
-        ADC_TypeDef *adc = (ADC_TypeDef *)__ADC_BASEs[ADCx - 1];
+        ADC_TypeDef *adc = (ADC_TypeDef *)__ADC_BASEs[ADCx];
 
         uint32_t sqVal = 0;
         uint8_t cnt = 0;
         uint8_t bitCnt = 0;
 
-        *(volatile uint32_t *)__ADC_RCC_ENR_BASEs[ADCx - 1] |= __ADC_RCC_EN[ADCx - 1];
+        *(volatile uint32_t *)__ADC_RCC_ENR_BASEs[ADCx] |= __ADC_RCC_EN[ADCx];
 
         adc->CR1 = 0x00000100;
         adc->CR2 = 0x000e0102;
@@ -44,7 +45,7 @@ namespace ADC
         adc->SMPR2 = 0x24924924;
 
         cfg.memoryAddr = add;
-        cfg.peripheralAddr = (uint32_t) & (adc->DR);
+        cfg.peripheralAddr = (uint32_t)(&(adc->DR));
 
         cfg.bufferSize = n;
 
@@ -57,7 +58,9 @@ namespace ADC
         cfg.channelConfig.mInc = 1;
         cfg.channelConfig.pInc = 0;
 
-        cfg.config((ADC_DMA_CH[ADCx - 1] >> 4) & 0x0f, ADC_DMA_CH[ADCx - 1] & 0x0f);
+        cfg.config((ADC_DMA_CH[ADCx] >> 4) & 0x0f, ADC_DMA_CH[ADCx] & 0x0f);
+
+        RCC->CFGR |= 0xc000;
 
         sqVal = 0;
         cnt = 0;

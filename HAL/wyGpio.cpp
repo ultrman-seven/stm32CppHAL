@@ -1,5 +1,5 @@
 #include "wyGpio.hpp"
-#include "chipf10x.h"
+#include "chipf10x.hpp"
 
 using namespace GPIO;
 

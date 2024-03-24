@@ -4,17 +4,17 @@ namespace DMA
 {
     void stop(uint8_t n, uint8_t channel)
     {
-        ((DMA_Channel_TypeDef *)(__DMA_BASEs[n] + 0x08 + 20 * (channel - 1)))->CCR &= 0xfffffffe;
+        ((DMA_Channel_TypeDef *)(__DMA_BASEs[n - 1] + 0x08 + 20 * (channel - 1)))->CCR &= 0xfffffffe;
     }
     void start(uint8_t n, uint8_t channel)
     {
-        ((DMA_Channel_TypeDef *)(__DMA_BASEs[n] + 0x08 + 20 * (channel - 1)))->CCR |= 0x01;
+        ((DMA_Channel_TypeDef *)(__DMA_BASEs[n - 1] + 0x08 + 20 * (channel - 1)))->CCR |= 0x01;
     }
 }
 
 using namespace DMA;
 
-configUnit::configUnit() : __valOfChannelConfig(0x01), bufferSize(1) {}
+configUnit::configUnit() : __valOfChannelConfig(0), bufferSize(1) {}
 
 // typedef struct
 // {
@@ -37,10 +37,12 @@ void configUnit::config(uint8_t n, uint8_t channel)
     DMA_Channel_TypeDef *ch = (DMA_Channel_TypeDef *)(__DMA_BASEs[n] + 0x08 + 20 * (channel - 1));
 
     *(volatile uint32_t *)__DMA_RCC_ENR_BASEs[n] |= __DMA_RCC_EN[n];
+    this->channelConfig.en = 0;
     ch->CCR = this->__valOfChannelConfig;
     ch->CMAR = this->memoryAddr;
     ch->CPAR = this->peripheralAddr;
     ch->CNDTR = this->bufferSize;
+    ch->CCR |= 0x01;
 }
 
 // void DMA1_Channel1_IRQHandler(void)

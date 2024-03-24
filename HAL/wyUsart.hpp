@@ -1,6 +1,6 @@
 #ifndef EE2DDE29_77F8_423A_8314_4B843FECD94D
 #define EE2DDE29_77F8_423A_8314_4B843FECD94D
-#include "chipf10x.h"
+#include "chipf10x.hpp"
 
 namespace USART
 {

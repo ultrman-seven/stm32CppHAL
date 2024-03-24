@@ -1,6 +1,6 @@
 #include "stdint.h"
 #include "list"
-#include "chipf10x.h"
+#include "chipf10x.hpp"
 #include "wySys.hpp"
 
 std::list<void (*)(void)> __mainLoopFuncs;
@@ -38,7 +38,6 @@ extern "C"
     }
 }
 
-#include "chipf10x.h"
 void (*__sysFoo)(void);
 bool __funcListRmvIf(void (*a)(void))
 {
