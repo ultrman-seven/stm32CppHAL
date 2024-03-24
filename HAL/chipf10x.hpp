@@ -1,5 +1,5 @@
-#ifndef F36D4273_B995_4D28_85CB_FEC0937E420E
-#define F36D4273_B995_4D28_85CB_FEC0937E420E
+#ifndef __WY_HAL_CHIP_HPP__
+#define __WY_HAL_CHIP_HPP__
 #include "stdint.h"
 #include "stm32f10x.h"
 
@@ -19,4 +19,12 @@ extern uint32_t const __DMA_RCC_ENR_BASEs[];
 extern const uint32_t __ADC_BASEs[];
 extern const uint32_t __ADC_RCC_EN[];
 extern uint32_t const __ADC_RCC_ENR_BASEs[];
-#endif /* F36D4273_B995_4D28_85CB_FEC0937E420E */
+
+extern const uint32_t __SPI_BASEs[];
+extern const uint32_t __SPI_RCC_EN[];
+extern uint32_t const __SPI_RCC_ENR_BASEs[];
+
+extern const uint32_t __TIM_BASEs[];
+extern const uint32_t __TIM_RCC_EN[];
+extern uint32_t const __TIM_RCC_ENR_BASEs[];
+#endif /* __WY_HAL_CHIP_HPP__ */

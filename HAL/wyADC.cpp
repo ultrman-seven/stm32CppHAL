@@ -51,7 +51,6 @@ namespace ADC
 
         cfg.channelConfig.m2m = 0;
         cfg.channelConfig.dirMem2Per = 0;
-        cfg.channelConfig.en = 1;
         cfg.channelConfig.circularMode = 1;
         cfg.channelConfig.mByteSize = DMA_ConfigByte2_bit16;
         cfg.channelConfig.pByteSize = DMA_ConfigByte2_bit16;
