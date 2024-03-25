@@ -6,22 +6,22 @@ using namespace USART;
 
 #define USART_TxEndFlag(__USART) ((__USART)->SR & 0xffffff7f)
 
-static inline uint32_t __UsartAfCfg(uint8_t n, const char *tx)
+static inline uint32_t __UsartAfCfg(uint8_t n, const char *txOrRx)
 {
     switch (n)
     {
     case 1:
-        if (*tx == 'b' || *tx == 'B')
+        if (*txOrRx == 'b' || *txOrRx == 'B')
             return 0x04;
         return 0x00;
     case 2:
-        if (*tx == 'd' || *tx == 'D')
+        if (*txOrRx == 'd' || *txOrRx == 'D')
             return 0x08;
         return 0x00;
     case 3:
-        if (*tx == 'c' || *tx == 'C')
+        if (*txOrRx == 'c' || *txOrRx == 'C')
             return 0x10;
-        if (*tx == 'd' || *tx == 'D')
+        if (*txOrRx == 'd' || *txOrRx == 'D')
             return 0x30;
         return 0x00;
     default:
@@ -32,17 +32,10 @@ static inline uint32_t __UsartAfCfg(uint8_t n, const char *tx)
 
 Serial::Serial(uint8_t n, const char *rx, const char *tx, uint32_t bode)
 {
-    GPIO::modeConfig(rx, GPIO::Mode::Mode_IN_FLOATING);
-    GPIO::modeConfig(tx, GPIO::Mode::Mode_AF_PP);
-
-    AFIO->MAPR |= __UsartAfCfg(n, tx);
-
     (*(volatile uint32_t *)__USART_RCC_ENR_BASEs[n - 1]) |= __USART_RCC_EN[n - 1];
     this->uart = (USART_TypeDef *)__USART_BASEs[n - 1];
 
-    // bode rate set
     double bodeDiv = (n == 1 ? __SysClockAPB2 : __SysClockAPB1) / 16 / bode;
-    // double bodeDiv = 72000000 / bode / 16;
     uint32_t divM = bodeDiv;
     bodeDiv -= divM;
     bodeDiv *= 16;
@@ -51,9 +44,24 @@ Serial::Serial(uint8_t n, const char *rx, const char *tx, uint32_t bode)
     uint32_t divF = bodeDiv;
     this->uart->BRR = (divM << 4) | divF;
 
-    this->uart->CR1 = 0x200c;
+    this->uart->CR1 = 0x2000;
     this->uart->CR2 = 0;
     this->uart->CR3 = 0;
+
+    if (rx != nullptr)
+    {
+        GPIO::modeConfig(rx, GPIO::Mode::Mode_IN_FLOATING);
+        this->uart->CR1 |= 0x0004;
+    }
+    if (tx != nullptr)
+    {
+        GPIO::modeConfig(tx, GPIO::Mode::Mode_AF_PP);
+        this->uart->CR1 |= 0x0008;
+    }
+
+    AFIO->MAPR |= __UsartAfCfg(n, tx == nullptr ? rx : tx);
+
+    // bode rate set
 }
 
 uint8_t Serial::receiveByte(void) { return this->uart->DR & (uint8_t)0x00fF; }

@@ -10,7 +10,7 @@ namespace USART
         USART_TypeDef *uart;
 
     public:
-        Serial(uint8_t, const char *rx, const char *tx, uint32_t = 115200);
+        Serial(uint8_t, const char *rx = nullptr, const char *tx = nullptr, uint32_t = 115200);
 
         void sendByte(uint8_t dat);
         void sendByte(uint8_t *dat, uint8_t len);
@@ -28,6 +28,5 @@ namespace USART
     };
 
 } // namespace USART
-
 
 #endif /* EE2DDE29_77F8_423A_8314_4B843FECD94D */
