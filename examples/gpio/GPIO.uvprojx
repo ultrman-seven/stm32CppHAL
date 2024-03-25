@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\lib\wyCppHal;..\..\lib\CMSIS;..\..\lib</IncludePath>
+              <IncludePath>..\..\Hal;..\..\CMSIS</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -386,12 +386,12 @@
             <File>
               <FileName>startup_stm32f10x_hd.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\lib\startup\startup_stm32f10x_hd.s</FilePath>
+              <FilePath>..\..\StartUpAsm\startup_stm32f10x_hd.s</FilePath>
             </File>
             <File>
               <FileName>system_stm32f10x.c</FileName>
               <FileType>8</FileType>
-              <FilePath>..\..\lib\CMSIS\system_stm32f10x.c</FilePath>
+              <FilePath>..\..\CMSIS\system_stm32f10x.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -401,17 +401,17 @@
             <File>
               <FileName>wyGpio.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\..\lib\wyCppHal\wyGpio.cpp</FilePath>
+              <FilePath>..\..\HAL\wyGpio.cpp</FilePath>
             </File>
             <File>
               <FileName>wySys.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\..\lib\wyCppHal\wySys.cpp</FilePath>
+              <FilePath>..\..\HAL\wySys.cpp</FilePath>
             </File>
             <File>
               <FileName>chipf10x.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\..\lib\wyCppHal\chipf10x.cpp</FilePath>
+              <FilePath>..\..\HAL\chipf10x.cpp</FilePath>
             </File>
           </Files>
         </Group>

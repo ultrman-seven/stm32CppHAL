@@ -399,6 +399,16 @@
           <GroupName>HAL</GroupName>
           <Files>
             <File>
+              <FileName>chipf10x.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\HAL\chipf10x.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>wyDMA.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\..\HAL\wyDMA.cpp</FilePath>
+            </File>
+            <File>
               <FileName>wyGpio.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\..\HAL\wyGpio.cpp</FilePath>
@@ -409,9 +419,9 @@
               <FilePath>..\..\HAL\wySys.cpp</FilePath>
             </File>
             <File>
-              <FileName>chipf10x.cpp</FileName>
+              <FileName>wyUsart.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\..\HAL\chipf10x.cpp</FilePath>
+              <FilePath>..\..\HAL\wyUsart.cpp</FilePath>
             </File>
           </Files>
         </Group>

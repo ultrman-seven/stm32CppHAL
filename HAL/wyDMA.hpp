@@ -11,7 +11,7 @@ namespace DMA
     {
     public:
         uint32_t peripheralAddr; /*!< Specifies the peripheral base address for DMAy Channelx. */
-        uint32_t memoryAddr; /*!< Specifies the memory base address for DMAy Channelx. */
+        uint32_t memoryAddr;     /*!< Specifies the memory base address for DMAy Channelx. */
         uint32_t bufferSize;
         union
         {
@@ -38,7 +38,7 @@ namespace DMA
 
         configUnit();
         ~configUnit() = default;
-        void config(uint8_t n, uint8_t channel);
+        void config(uint8_t n = 1, uint8_t channel = 1);
     };
 
     void stop(uint8_t n, uint8_t channel);
