@@ -1,10 +1,9 @@
 #include "wyUsart.hpp"
 #include "wyGpio.hpp"
 #include "wySys.hpp"
+#include "queue"
 
 using namespace USART;
-
-#define USART_TxEndFlag(__USART) ((__USART)->SR & 0xffffff7f)
 
 static inline uint32_t __UsartAfCfg(uint8_t n, const char *txOrRx)
 {
@@ -30,18 +29,18 @@ static inline uint32_t __UsartAfCfg(uint8_t n, const char *txOrRx)
     return 0x00;
 }
 
-Serial::Serial(uint8_t n, const char *rx, const char *tx, uint32_t bode)
+Serial::Serial(uint8_t n, const char *rx, const char *tx, uint32_t baud)
 {
     (*(volatile uint32_t *)__USART_RCC_ENR_BASEs[n - 1]) |= __USART_RCC_EN[n - 1];
     this->uart = (USART_TypeDef *)__USART_BASEs[n - 1];
 
-    double bodeDiv = (n == 1 ? __SysClockAPB2 : __SysClockAPB1) / 16 / bode;
-    uint32_t divM = bodeDiv;
-    bodeDiv -= divM;
-    bodeDiv *= 16;
-    if ((bodeDiv - (int)bodeDiv) >= 0.5)
-        bodeDiv += 1;
-    uint32_t divF = bodeDiv;
+    double baudDiv = (n == 1 ? __SysClockAPB2 : __SysClockAPB1) / 16 / baud;
+    uint32_t divM = baudDiv;
+    baudDiv -= divM;
+    baudDiv *= 16;
+    if ((baudDiv - (int)baudDiv) >= 0.5)
+        baudDiv += 1;
+    uint32_t divF = baudDiv;
     this->uart->BRR = (divM << 4) | divF;
 
     this->uart->CR1 = 0x2000;
@@ -61,11 +60,12 @@ Serial::Serial(uint8_t n, const char *rx, const char *tx, uint32_t bode)
 
     AFIO->MAPR |= __UsartAfCfg(n, tx == nullptr ? rx : tx);
 
-    // bode rate set
+    // baud set
 }
 
 uint8_t Serial::receiveByte(void) { return this->uart->DR & (uint8_t)0x00fF; }
 
+#define USART_TxEndFlag(__USART) ((__USART)->SR & 0xffffff7f)
 void Serial::sendByte(uint8_t dat)
 {
     this->uart->DR = (dat & (uint8_t)0xFF);
@@ -83,6 +83,14 @@ void Serial::sendByte(uint8_t *dat, uint8_t len)
     }
 }
 
+void Serial::putChar(uint8_t dat)
+{
+    this->uart->DR = (dat & (uint8_t)0xFF);
+    while (!USART_TxEndFlag(this->uart))
+        ;
+}
+
+#if 0
 Serial &Serial::operator<<(uint8_t dat)
 {
     this->uart->DR = (dat & (uint16_t)0x00FF);
@@ -132,11 +140,16 @@ Serial &Serial::operator<<(char *s)
     }
     return *this;
 }
+#endif
+
 Serial &Serial::operator>>(uint8_t &dat)
 {
     dat = this->receiveByte();
     return *this;
 }
+
+void (*__USART_RxIRQ_Callbacks[5])(uint8_t);
+std::queue<uint8_t> __USART_fifo[5];
 
 void USART1_IRQHandler(void) {}
 void USART2_IRQHandler(void) {}

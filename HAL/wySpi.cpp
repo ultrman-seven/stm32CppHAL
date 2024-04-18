@@ -1,4 +1,4 @@
-#include "chipf10x.h"
+#include "chipf10x.hpp"
 // #include "wyGpio.hpp"
 namespace SPI
 {
@@ -6,24 +6,9 @@ namespace SPI
     {
     private:
         SPI_TypeDef *spi;
-        // GPIO::GpioPin *sclk = nullptr, *mosi = nullptr, *miso = nullptr;
-
-    protected:
-        void init(const char *mosi, const char *miso, const char *sclk);
-        void init(uint8_t num, const char *mosi, const char *miso, const char *sclk);
-
 
     public:
-        SPI_Object(/* args */) = default;
-        SPI_Object(const char *mosi, const char *miso, const char *sclk)
-        {
-            init(mosi, miso, sclk);
-        }
-
-        SPI_Object(uint8_t num, const char *mosi, const char *miso, const char *sclk)
-        {
-            init(num, mosi, miso, sclk);
-        }
+        SPI_Object(uint8_t num, const char *mosi, const char *miso, const char *sclk);
         // void sendOneByte(uint8_t dat);
         // uint8_t read(void);
         uint32_t writeRead(uint8_t dat = 0xff);
@@ -32,4 +17,22 @@ namespace SPI
     };
 } // namespace SPI
 
+#include "wyGpio.hpp"
+
 using namespace SPI;
+
+SPI_Object::SPI_Object(uint8_t num, const char *mosi, const char *miso, const char *sclk)
+{
+    if (mosi != nullptr)
+    {
+        GPIO::modeConfig(mosi, GPIO::Mode_AF_PP);
+    }
+    if (sclk != nullptr)
+    {
+        GPIO::modeConfig(sclk, GPIO::Mode_AF_PP);
+    }
+    if (miso != nullptr)
+    {
+        GPIO::modeConfig(sclk, GPIO::Mode_IN_FLOATING);
+    }
+}
